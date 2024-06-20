@@ -30,13 +30,29 @@ For SetSmith to function, you need to create a Spotify application through the d
     cd SetSmith
     ```
 
-3. Set the environment variables in the `docker-compose.yml` file with the information obtained from the Spotify developer dashboard:
+3. Create a file named `docker-compose.yml` with the information obtained from the Spotify developer dashboard inside your root directory:
 
     ```
-    environment:
-      - SPOTIPY_CLIENT_ID=<CLIENT_ID_FROM_EARLIER>
-      - SPOTIPY_CLIENT_SECRET=<SECRET_ID_FROM_EARLIER>
-      - SPOTIPY_REDIRECT_URI=http://127.0.0.1:5001/callback
+    version: '3.8'
+    
+    services:
+      backend:
+        build: ./backend
+        environment:
+          - SPOTIPY_CLIENT_ID=
+          - SPOTIPY_CLIENT_SECRET=
+          - SPOTIPY_REDIRECT_URI=
+        ports:
+          - "5001:5001"
+        volumes:
+          - ./backend:/app
+      frontend:
+        build: ./frontend
+        ports:
+          - "3000:3000"
+        volumes:
+          - ./frontend:/app
+        command: ["npm", "start"]
     ```
 
 4. Ensure you have Docker and Docker Compose installed on your machine.
