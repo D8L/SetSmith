@@ -15,7 +15,6 @@ function CreateSet() {
   const [availableGenres, setAvailableGenres] = useState([]);
   const [useGenres, setUseGenres] = useState(false);
   const [duration, setDuration] = useState('');
-  const [setDetails, setSetDetails] = useState(null);
   const [creatingSet, setCreatingSet] = useState(false);
   const navigate = useNavigate();
 
@@ -60,7 +59,6 @@ function CreateSet() {
         selected_playlist_id: selectedPlaylist,
         duration: duration ? parseInt(duration, 10) : null
       }, { withCredentials: true });
-      setSetDetails(response.data.set_details);
       setMessage(response.data.status);
       navigate('/set-details', { state: { setDetails: response.data.set_details } });
     } catch (error) {
@@ -75,34 +73,33 @@ function CreateSet() {
     setGenres((prev) => prev.includes(genre) ? prev.filter(g => g !== genre) : [...prev, genre]);
   };
 
-  const handleInputChange = (e) => {
-    const inputGenres = e.target.value.split(',').map(g => g.trim());
-    setGenres(inputGenres);
-  };
-
   if (loading) {
     return <p>Loading playlists...</p>;
   }
 
   return (
-    <div>
-      <h2>Create Set</h2>
-      <select onChange={(e) => setSelectedPlaylist(e.target.value)} value={selectedPlaylist}>
-        <option value="">Select a Playlist</option>
-        {playlists.map((playlist, index) => (
-          <option key={index} value={playlist.id}>{playlist.name}</option>
-        ))}
-      </select>
-      <div>
+    <div className="container">
+      <h2 className="my-4 text-center">Create Set</h2>
+      <div className="mb-3">
+        <label className="form-label">Select a Playlist</label>
+        <select className="form-select" onChange={(e) => setSelectedPlaylist(e.target.value)} value={selectedPlaylist}>
+          <option value="">Select a Playlist</option>
+          {playlists.map((playlist, index) => (
+            <option key={index} value={playlist.id}>{playlist.name}</option>
+          ))}
+        </select>
+      </div>
+      <div className="form-check mb-3">
         <input
+          className="form-check-input"
           type="checkbox"
           checked={useGenres}
           onChange={() => setUseGenres(!useGenres)}
         />
-        <label> Use Genres</label>
+        <label className="form-check-label">Use Genres</label>
       </div>
       {useGenres && (
-        <div>
+        <div className="mb-3">
           <h3>Available Genres</h3>
           {loadingGenres ? (
             <div className="spinner">
@@ -120,7 +117,7 @@ function CreateSet() {
               {availableGenres.map((genre, index) => (
                 <button
                   key={index}
-                  className={genres.includes(genre) ? 'genre selected' : 'genre'}
+                  className={`btn btn-outline-secondary m-1 ${genres.includes(genre) ? 'active' : ''}`}
                   onClick={() => toggleGenre(genre)}
                 >
                   {genre}
@@ -130,26 +127,37 @@ function CreateSet() {
           )}
         </div>
       )}
-      <input
-        type="number"
-        placeholder="Duration (in minutes)"
-        value={duration}
-        onChange={(e) => setDuration(e.target.value)}
-      />
-      <input
-        type="text"
-        placeholder="Playlist Name"
-        value={playlistName}
-        onChange={(e) => setPlaylistName(e.target.value)}
-      />
-      <select value={playlistVisibility} onChange={(e) => setPlaylistVisibility(e.target.value)}>
-        <option value={1}>Public</option>
-        <option value={2}>Private</option>
-      </select>
-      <button onClick={handleCreateSet} disabled={creatingSet}>
+      <div className="mb-3">
+        <label className="form-label">Duration (in minutes)</label>
+        <input
+          type="number"
+          className="form-control"
+          placeholder="Duration (in minutes)"
+          value={duration}
+          onChange={(e) => setDuration(e.target.value)}
+        />
+      </div>
+      <div className="mb-3">
+        <label className="form-label">Playlist Name</label>
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Playlist Name"
+          value={playlistName}
+          onChange={(e) => setPlaylistName(e.target.value)}
+        />
+      </div>
+      <div className="mb-3">
+        <label className="form-label">Playlist Visibility</label>
+        <select className="form-select" value={playlistVisibility} onChange={(e) => setPlaylistVisibility(e.target.value)}>
+          <option value={1}>Public</option>
+          <option value={2}>Private</option>
+        </select>
+      </div>
+      <button className="btn btn-primary" onClick={handleCreateSet} disabled={creatingSet}>
         {creatingSet ? 'Creating Set...' : 'Create Set'}
       </button>
-      {message && <p>{message}</p>}
+      {message && <p className="mt-3">{message}</p>}
     </div>
   );
 }
