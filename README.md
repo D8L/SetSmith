@@ -57,6 +57,7 @@ For SetSmith to function, you need to create a Spotify application through the d
 - NodeJS
 - Spotify API
 - Spotipy
+- Bootstrap
 
 ## Authors
 
