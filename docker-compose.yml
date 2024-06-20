@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    environment:
+      - SPOTIPY_CLIENT_ID=
+      - SPOTIPY_CLIENT_SECRET=
+      - SPOTIPY_REDIRECT_URI=
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./backend:/app
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+    command: ["npm", "start"]
