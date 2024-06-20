@@ -129,9 +129,10 @@ def create_set():
     # Fetch selected playlist tracks
     playlist_tracks = get_playlist_items(sp, selected_playlist_id)
 
+    unique_tracks, songs_by_genre, artist_cache, artist_ids = process_playlist_data(playlist_tracks, sp)
+    selected_tracks = []
+
     if genres:
-        unique_tracks, songs_by_genre, artist_cache, artist_ids = process_playlist_data(playlist_tracks, sp)
-        selected_tracks = []
         for genre in genres.split(','):
             if genre in songs_by_genre:
                 selected_tracks.extend(songs_by_genre[genre])
